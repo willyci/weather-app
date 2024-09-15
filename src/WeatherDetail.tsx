@@ -7,6 +7,8 @@ interface WeatherData {
   main: {
     temp: number;
     humidity: number;
+    temp_min: number;
+    temp_max: number;
   };
   weather: {
     description: string;
@@ -80,12 +82,19 @@ const WeatherDetail: React.FC = () => {
       <button onClick={() => navigate('/')} className="mb-4 bg-blue-500 text-white p-2 rounded">
         Go Back
       </button>
+      <h2 className="text-2xl font-bold mb-2">{weatherData.name}</h2>
       <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-        <h2 className="text-2xl font-bold mb-2">{weatherData.name}</h2>
+        <p className="mb-4">{weatherData.weather[0].description}</p>
         <p className="text-4xl font-bold mb-2">
           {Math.round(weatherData.main.temp)}°{unit === 'metric' ? 'C' : 'F'}
         </p>
-        <p className="mb-4">{weatherData.weather[0].description}</p>
+        <p className="text-4xl font-bold mb-2">
+          H: {Math.round(weatherData.main.temp_min)}°{unit === 'metric' ? 'C' : 'F'}
+        </p>
+        <p className="text-4xl font-bold mb-2">
+          L: {Math.round(weatherData.main.temp_max)}°{unit === 'metric' ? 'C' : 'F'}
+        </p>
+        
         <div className="grid grid-cols-2 gap-4">
           <div className="flex items-center">
             <Sun className="mr-2" />
