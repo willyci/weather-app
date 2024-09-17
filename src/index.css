@@ -86,6 +86,84 @@ input {
   min-width: 50px;
 }
 
+.flexh {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-content: flex-start;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.flexhv {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-content: flex-start;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.flexv {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-content: flex-start;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.w-50 {
+  width: 50vw;
+  min-width: 320px;
+}
+
+.w-50-10 {
+  width: 50vw;
+  min-width: 320px;
+  padding-right: 10%;
+}
+
+.w-25 {
+  width: 25vw;
+  min-width: 150px;
+  padding: 10px 0px;
+}
+
+.w-25-10 {
+  width: 25vw;
+  min-width: 150px;
+  padding-right: 10%;
+}
+
+.big-text {
+  font-size: 4em;
+  margin: 0px 10px;
+}
+.medium-text {
+  font-size: 1.5em;
+  margin: 0px 10px;
+}
+
+.small-text {
+  font-size: 1em;
+  margin: 0px 10px;
+  text-transform: capitalize;
+}
+
+.bold-div-1 {
+  border-right: 2px solid black;
+  border-bottom: 2px solid black;
+}
+
+.bold-div-2 {
+    border-bottom: 2px solid black;
+}
+
+.bold-div-3 {
+  border-right: 2px solid black;
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
@@ -108,4 +186,17 @@ input {
   input {
     width: 90%;
   }
+
+  .flexhv {
+    flex-direction: column;
+  }
+
+  .w-25 {
+    padding: 10px;
+  }
+
+  .w-50-10 {
+    padding-right: 0px;
+  }
+
 }
