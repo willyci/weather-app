@@ -109,19 +109,22 @@ input {
   flex-direction: column;
   flex-wrap: nowrap;
   align-content: flex-start;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
 }
 
 .w-50 {
   width: 50vw;
   min-width: 320px;
+  max-width: 450px;
+  margin: 50px 0px;
 }
 
 .w-50-10 {
   width: 50vw;
   min-width: 320px;
-  padding-right: 10%;
+  padding-right: 10%;  
+  margin: 50px 0px;
 }
 
 .w-25 {
@@ -134,6 +137,7 @@ input {
   width: 25vw;
   min-width: 150px;
   padding-right: 10%;
+   margin: 50px 0px;
 }
 
 .big-text {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Home from './Home';
-import WeatherDetail from './WeatherDetail';
+import Home from './pages/Home';
+import WeatherDetail from './pages/WeatherDetail';
 
 const App: React.FC = () => {
   return (

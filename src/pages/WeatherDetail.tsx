@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Sun, Moon, Wind, Droplets, ArrowLeft } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 
 interface WeatherData {
   name: string;
@@ -32,32 +32,51 @@ const WeatherDetail: React.FC = () => {
   const { city } = useParams<{ city: string }>();
   const navigate = useNavigate();
 
+
   useEffect(() => {
-    const savedUnit = localStorage.getItem("unit");
-    if (savedUnit) {
-      setUnit(savedUnit as "metric" | "imperial");
-    }
+    const fetchWeather = async (city: string) => {
+      const storedWeatherData = localStorage.getItem(`weatherData_${city}`);
+      const storedTimestamp = localStorage.getItem(`weatherDataTimestamp_${city}`);
+
+      // Check if we have stored data and if it's less than 60 minutes old
+      if (storedWeatherData && storedTimestamp) {
+        const timestamp = JSON.parse(storedTimestamp);
+        const currentTime = Date.now();
+
+        // Check if the data is less than 60 minutes old (3600000 milliseconds)
+        if (currentTime - timestamp < 3600000) {
+          console.log('Using cached weather data');
+          setWeatherData(JSON.parse(storedWeatherData));
+          return;
+        }
+      }
+
+      // If no valid cached data, fetch new data
+      try {
+        const response = await fetch(
+          `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`
+        );
+        if (!response.ok) {
+          throw new Error('Weather data not found');
+        }
+        const data = await response.json();
+
+        // Save the weather data and timestamp to localStorage
+        localStorage.setItem(`weatherData_${city}`, JSON.stringify(data));
+        localStorage.setItem(`weatherDataTimestamp_${city}`, JSON.stringify(Date.now()));
+
+        setWeatherData(data);
+      } catch (err) {
+        console.error('Failed to fetch weather data for', city, err);
+        setError("Failed to fetch weather data. Please try again.");
+        setWeatherData(null);
+      }
+    };
+
     if (city) {
       fetchWeather(city);
     }
-  }, [city, unit]);
-
-  const fetchWeather = async (city: string) => {
-    try {
-      const response = await fetch(
-        `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=${unit}`
-      );
-      if (!response.ok) {
-        throw new Error("Weather data not found");
-      }
-      const data = await response.json();
-      setWeatherData(data);
-      setError(null);
-    } catch (err) {
-      setError("Failed to fetch weather data. Please try again.");
-      setWeatherData(null);
-    }
-  };
+  }, [city]);
 
   if (error) {
     return (

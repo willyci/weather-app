@@ -38,6 +38,22 @@ const Home: React.FC = () => {
   }, [currentLocation, unit]);
 
   const fetchWeather = async (city: string) => {
+    const storedWeatherData = localStorage.getItem(`weatherData_${city}`);
+    const storedTimestamp = localStorage.getItem(`weatherDataTimestamp_${city}`);
+
+    // Check if we have stored data and if it's less than 60 minutes old
+    if (storedWeatherData && storedTimestamp) {
+      const timestamp = JSON.parse(storedTimestamp);
+      const currentTime = Date.now();
+
+      // Check if the data is less than 60 minutes old (3600000 milliseconds)
+      if (currentTime - timestamp < 3600000) {
+        console.log('Using cached weather data');
+        return JSON.parse(storedWeatherData);
+      }
+    }
+
+    // If no valid cached data, fetch new data
     try {
       const response = await fetch(
         `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=${unit}`
@@ -45,7 +61,13 @@ const Home: React.FC = () => {
       if (!response.ok) {
         throw new Error('Weather data not found');
       }
-      return await response.json();
+      const data = await response.json();
+
+      // Save the weather data and timestamp to localStorage
+      localStorage.setItem(`weatherData_${city}`, JSON.stringify(data));
+      localStorage.setItem(`weatherDataTimestamp_${city}`, JSON.stringify(Date.now()));
+
+      return data;
     } catch (err) {
       console.error('Failed to fetch weather data for', city, err);
       return null;
