@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MapPin } from 'lucide-react';
 
 import SearchBar from '../components/SearchBar';
 import LocationButton from '../components/LocationButton';
@@ -13,6 +12,7 @@ interface WeatherData {
   };
 }
 
+//const API_KEY = process.env.REACT_APP_WEATHER_API_KEY;
 const API_KEY = '6db336e9546858e122211e44de591f10';
 const DEFAULT_LOCATIONS = ['Berlin', 'London'];
 const FALLBACK_LOCATION = 'Boston';
