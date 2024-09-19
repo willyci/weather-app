@@ -1,7 +1,52 @@
+the app is a simple weather app that allows you to search for a location and see the current weather, temperature, sunrise and sunset times.
+
 to run the app:
     npm install && npm run dev
+    open http://localhost:5173/ in your browser
+
+to run the tests:
+    npm test
 
 
+
+
+# Approach to the Problem
+
+To tackle the project, I followed a structured approach:
+
+1. **Understand Requirements**: Reviewed the project requirements and wireframe.
+2. **Break Down the Problem**: Divided the project into smaller, manageable parts.
+3. **Set Up the Template**: Used React and Vite to create the app template.
+4. **Home Page Development**: Built the home page with default locations and a search bar, integrating the OpenWeatherMap API to display weather data.
+5. **Weather Details Page**: Developed the weather details page, fetching and displaying weather data from the OpenWeatherMap API.
+6. **Styling**: Focused on styling after all components were functional.
+7. **Testing**: Implemented test scripts to ensure functionality.
+8. **Stretch Goals**: Added local storage to save weather data and recently entered locations.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-----------------------------------
 
 Take Home Exercise
 Frontend Engineer

@@ -14,29 +14,30 @@ const DEFAULT_LOCATIONS = ['Berlin', 'London'];
 const FALLBACK_LOCATION = 'Boston';
 
 const Home: React.FC = () => {
+  // State variables for location, weather data, unit, and current location
   const [location, setLocation] = useState<string>('');
   const [defaultLocationsData, setDefaultLocationsData] = useState<Record<string, WeatherData>>({});
   const [unit, setUnit] = useState<'metric' | 'imperial'>('metric');
   const [currentLocation, setCurrentLocation] = useState<string | null>(null);
-  //const [isCurrentLocationReal, setIsCurrentLocationReal] = useState<boolean>(false);
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Load saved unit from localStorage
     const savedUnit = localStorage.getItem('unit');
     if (savedUnit) {
       setUnit(savedUnit as 'metric' | 'imperial');
     }
-    getCurrentLocation();
-    // We'll call fetchDefaultLocationsWeather after setting the current location
+    getCurrentLocation(); // Get the user's current location
   }, [unit]);
 
   useEffect(() => {
-    // This effect will run when currentLocation is set or changed
+    // Fetch weather data for default locations when currentLocation or unit changes
     fetchDefaultLocationsWeather();
     const interval = setInterval(fetchDefaultLocationsWeather, 600000); // Update every 10 minutes
-    return () => clearInterval(interval);
+    return () => clearInterval(interval); // Cleanup interval on unmount
   }, [currentLocation, unit]);
 
+  // Function to fetch weather data for a specific city
   const fetchWeather = async (city: string) => {
     const storedWeatherData = localStorage.getItem(`weatherData_${city}`);
     const storedTimestamp = localStorage.getItem(`weatherDataTimestamp_${city}`);
@@ -46,14 +47,14 @@ const Home: React.FC = () => {
       const timestamp = JSON.parse(storedTimestamp);
       const currentTime = Date.now();
 
-      // Check if the data is less than 60 minutes old (3600000 milliseconds)
+      // Use cached data if it's less than 60 minutes old
       if (currentTime - timestamp < 3600000) {
         console.log('Using cached weather data');
         return JSON.parse(storedWeatherData);
       }
     }
 
-    // If no valid cached data, fetch new data
+    // Fetch new data if no valid cached data
     try {
       const response = await fetch(
         `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=${unit}`
@@ -63,7 +64,7 @@ const Home: React.FC = () => {
       }
       const data = await response.json();
 
-      // Save the weather data and timestamp to localStorage
+      // Save the fetched weather data and timestamp to localStorage
       localStorage.setItem(`weatherData_${city}`, JSON.stringify(data));
       localStorage.setItem(`weatherDataTimestamp_${city}`, JSON.stringify(Date.now()));
 
@@ -74,6 +75,7 @@ const Home: React.FC = () => {
     }
   };
 
+  // Function to fetch weather data for default locations and the current location
   const fetchDefaultLocationsWeather = async () => {
     const locationsToFetch = [...DEFAULT_LOCATIONS, currentLocation].filter(Boolean);
     const weatherPromises = locationsToFetch.map(city => fetchWeather(city as string));
@@ -84,9 +86,10 @@ const Home: React.FC = () => {
         newDefaultLocationsData[locationsToFetch[index] as string] = data;
       }
     });
-    setDefaultLocationsData(newDefaultLocationsData);
+    setDefaultLocationsData(newDefaultLocationsData); // Update state with new weather data
   };
 
+  // Handle form submission to navigate to the weather details page
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (location) {
@@ -94,21 +97,23 @@ const Home: React.FC = () => {
     }
   };
 
+  // Change the unit of measurement for temperature
   const handleUnitChange = (newUnit: 'metric' | 'imperial') => {
     setUnit(newUnit);
     localStorage.setItem('unit', newUnit);
-    fetchDefaultLocationsWeather();
+    fetchDefaultLocationsWeather(); // Fetch weather data with the new unit
   };
 
+  // Set a fallback location if the current location cannot be determined
   const setFallbackLocation = async () => {
     setCurrentLocation(FALLBACK_LOCATION);
-    //setIsCurrentLocationReal(false);
     const fallbackData = await fetchWeather(FALLBACK_LOCATION);
     if (fallbackData) {
       setDefaultLocationsData(prev => ({ ...prev, [FALLBACK_LOCATION]: fallbackData }));
     }
   };
 
+  // Get the user's current geographical location
   const getCurrentLocation = () => {
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
@@ -123,21 +128,20 @@ const Home: React.FC = () => {
             }
             const data = await response.json();
             setCurrentLocation(data.name);
-            //setIsCurrentLocationReal(true);
             setDefaultLocationsData(prev => ({ ...prev, [data.name]: data }));
           } catch (err) {
             console.error('Failed to fetch current location weather', err);
-            setFallbackLocation();
+            setFallbackLocation(); // Use fallback if fetching fails
           }
         },
         (error) => {
           console.error("Error getting location:", error);
-          setFallbackLocation();
+          setFallbackLocation(); // Use fallback if geolocation fails
         }
       );
     } else {
       console.log("Geolocation is not supported by this browser.");
-      setFallbackLocation();
+      setFallbackLocation(); // Use fallback if geolocation is not supported
     }
   };
 
