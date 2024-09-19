@@ -8,8 +8,6 @@ to run the tests:
     npm test
 
 
-
-
 # Approach to the Problem
 
 To tackle the project, I followed a structured approach:
@@ -26,7 +24,7 @@ To tackle the project, I followed a structured approach:
 
 
 
-
+If I had more time, I would simplify the styling to enhance clarity and ease of maintenance. Additionally, I would implement internationalization (i18n) to support multiple languages, ensuring a broader user reach. I would also consider integrating Google Analytics for better tracking of user interactions and behavior within the app. Lastly, I would create a Dockerfile to facilitate continuous integration and deployment (CI/CD) processes.
 
 
 
