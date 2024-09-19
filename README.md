@@ -22,19 +22,7 @@ To tackle the project, I followed a structured approach:
 6. **Styling**: Focused on styling after all components were functional.
 7. **Testing**: Implemented test scripts to ensure functionality.
 8. **Stretch Goals**: Added local storage to save weather data and recently entered locations.
-
-
-
-
-
-
-
-
-
-
-
-
-
+9. **Stretch Goals**: Created reusable components for location button, search bar, unit toggle, temperature details and other details.
 
 
 

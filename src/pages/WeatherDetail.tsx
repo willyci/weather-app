@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
+import TemperatureDetails from '../components/TemperatureDetails';
+import OtherDetails from '../components/OtherDetails';
 
 // Define the structure of the weather data we expect from the API
 interface WeatherData {
@@ -122,47 +124,21 @@ const WeatherDetail: React.FC = () => {
         <h2 className="text-xl flex-grow text-center">{weatherData.name}</h2>
         <div className="w-4"></div>
       </div>
-      <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 flexhv">
-        <div className="w-50 flexv">
-          <p className="mb-4 small-text">{weatherData.weather[0].description}</p>
-          <p className="big-text font-bold mb-2">
-            {Math.round(weatherData.main.temp)}°{unit === "metric" ? "C" : "F"}
-          </p>
-          <div className="flexh">
-            <p className="text-4xl font-bold mb-2 small-text">
-              H: {Math.round(weatherData.main.temp_min)}°
-              {unit === "metric" ? "C" : "F"}&nbsp;
-            </p>
-            <p className="text-4xl font-bold mb-2 small-text">
-              L: {Math.round(weatherData.main.temp_max)}°
-              {unit === "metric" ? "C" : "F"}
-            </p>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-2 gap-4 w-50-10">
-          <div className="flexh">
-            <div className="flex items-center flexv w-25 bold-div-1">
-              <div>Sunrise</div>
-              <div className="medium-text">{new Date(weatherData.sys.sunrise * 1000).toLocaleTimeString()}</div>
-            </div>
-            <div className="flex items-center flexv w-25 bold-div-2">
-              <div>Sunset</div>
-              <div className="medium-text">{new Date(weatherData.sys.sunset * 1000).toLocaleTimeString()}</div>
-            </div>
-          </div>
-          <div className="grid grid-cols-2 gap-4 flexh">
-            <div className="flex items-center flexv w-25 bold-div-3">
-              <div>Wind</div>
-              <div className="medium-text">{weatherData.wind.speed} m/s</div>
-            </div>
-            <div className="flex items-center flexv w-25">
-              <div>Humidity</div>
-              <div className="medium-text">{weatherData.main.humidity}%</div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 flexhv">      
+      <TemperatureDetails
+        temperature={weatherData.main.temp}
+        tempMin={weatherData.main.temp_min}
+        tempMax={weatherData.main.temp_max}
+        unit={unit}
+        description={weatherData.weather[0].description}
+      />
+      <OtherDetails
+        windSpeed={weatherData.wind.speed}
+        humidity={weatherData.main.humidity}
+        sunrise={weatherData.sys.sunrise}
+        sunset={weatherData.sys.sunset}
+      />
+    </div>
     </div>
   );
 };

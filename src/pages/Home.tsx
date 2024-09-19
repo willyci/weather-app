@@ -2,6 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MapPin } from 'lucide-react';
 
+import SearchBar from '../components/SearchBar';
+import LocationButton from '../components/LocationButton';
+import UnitToggle from '../components/UnitToggle';
+
 interface WeatherData {
   name: string;
   main: {
@@ -149,65 +153,31 @@ const Home: React.FC = () => {
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-3xl font-bold mb-4">Dashboard</h1>
-      
-      <form onSubmit={handleSubmit} className="mb-4">
-        <input
-          type="text"
-          value={location}
-          onChange={(e) => setLocation(e.target.value)}
-          placeholder="Enter a city"
-          className="p-2 border rounded mr-2"
-        />
-        <button type="submit" className="p-2 bg-blue-500 text-white rounded">
-          Search
-        </button>
-      </form> 
 
-      <div className="mb-4">
-        <button 
-          onClick={() => handleUnitChange('metric')} 
-          className={`button-small mr-2 p-2 rounded ${unit === 'metric' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
-        >
-          °C
-        </button>
-        <button 
-          onClick={() => handleUnitChange('imperial')} 
-          className={`button-small p-2 rounded ${unit === 'imperial' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
-        >
-          °F
-        </button>
-      </div>
+      <SearchBar location={location} setLocation={setLocation} handleSubmit={handleSubmit} />
+      <UnitToggle unit={unit} handleUnitChange={handleUnitChange} />
+      
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {currentLocation && (
-          <button 
-            onClick={() => navigate(`/weather/${currentLocation}`)} 
-            className="w-full bg-gray-200 p-2 rounded flex justify-between items-center"
-          >
-            <span className="flex items-center">
-              <MapPin className="mr-2" size={18} /> {currentLocation}  </span>
-            {defaultLocationsData[currentLocation] && (
-              <span className="font-bold"> 
-                {Math.round(defaultLocationsData[currentLocation].main.temp)}°{unit === 'metric' ? 'C' : 'F'}
-              </span>
-            )}
-          </button>
+          <LocationButton
+            city={currentLocation}
+            temperature={defaultLocationsData[currentLocation]?.main.temp}
+            unit={unit}
+            onClick={() => navigate(`/weather/${currentLocation}`)}
+          />
         )}
         {DEFAULT_LOCATIONS.map((city) => (
-          <button 
-            key={city} 
-            onClick={() => navigate(`/weather/${city}`)} 
-            className="w-full bg-gray-200 p-2 rounded flex justify-between items-center"
-          >
-            <span className="flex items-center"><MapPin className="mr-2" size={18} /> {city} </span>
-            {defaultLocationsData[city] && (
-              <span className="font-bold"> 
-                {Math.round(defaultLocationsData[city].main.temp)}°{unit === 'metric' ? 'C' : 'F'}
-              </span>
-            )}
-          </button>
+          <LocationButton
+            key={city}
+            city={city}
+            temperature={defaultLocationsData[city]?.main.temp}
+            unit={unit}
+            onClick={() => navigate(`/weather/${city}`)}
+          />
         ))}
       </div>
+
     </div>
   );
 };
